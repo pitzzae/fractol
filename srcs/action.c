@@ -14,6 +14,8 @@
 
 int				ft_mouse_action(int button, int x, int y, t_data *data)
 {
+	(void) x;
+	(void) y;
 	if (button == 3 && data->move == 1)
 		data->move = 0;
 	else if (button == 3 && data->move == 0)
@@ -31,6 +33,7 @@ int				ft_mouse_action(int button, int x, int y, t_data *data)
 
 int				ft_mouse_motion(int x, int y, t_data *data)
 {
+	(void) y;
 	if (data->move == 1)
 	{
 		data->c_point.real = data->r_point.real + (double)x / 50000;

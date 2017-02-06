@@ -14,33 +14,45 @@ NAME = fractol
 
 LIB_DIR = ./libft
 LIB_MLX_DIR = ./minilibx
+O_DIR = ./obj
+O_DIR_CUDA = ./obj_cuda
+SRCS_DIR = ./srcs/
 
 LIB_NAME = $(LIB_DIR)/libft.a
 
 CFLAGS=-Wall -Wextra -Werror
 
-SRCS_DIR = ./srcs/
+SRCS 		= 	main.c init_x11.c action.c screen.c thread.c \
+				init_fractal_julia.c init_fractal_mandelbrot.c \
+				fractal.c ft_complexe.c
 
-SRCS = $(SRCS_DIR)main.c
-SRCS += $(SRCS_DIR)init_x11.c
-SRCS += $(SRCS_DIR)action.c
-SRCS += $(SRCS_DIR)screen.c
-SRCS += $(SRCS_DIR)thread.c
-SRCS += $(SRCS_DIR)init_fractal_julia.c
-SRCS += $(SRCS_DIR)init_fractal_mandelbrot.c
-SRCS += $(SRCS_DIR)fractal.c
-SRCS += $(SRCS_DIR)ft_complexe.c
+SRCS_CUDA	= 	ft_complexe_cuda.cu
 
 #MINILIBX = -Lminilibx -lmlx -framework OpenGL -framework AppKit
 MINILIBX = -L./mlx -lmlx -lXext -lX11 -lm -lpthread
 
-all: ${NAME}
+OBJS = $(addprefix $(O_DIR)/,$(SRCS:.c=.o))
+OBJS_CUDA = $(addprefix $(O_DIR_CUDA)/,$(SRCS_CUDA:.cu=.o))
 
-$(NAME):
-	@echo "Make lib_ft"
+all: $(NAME)
+
+$(NAME): $(OBJS) $(OBJS_CUDA)
+	@echo "\nMake lib_ft"
 	@make -C $(LIB_DIR)
 	@echo "Make $(NAME)"
-	@gcc -o $(NAME) $(SRCS) -I./includes -L$(LIB_DIR) -lft $(MINILIBX)
+	#@gcc -o $(NAME) $(OBJS_CUDA) $(OBJS) -I./includes -L$(LIB_DIR) -lft $(MINILIBX)
+	@nvcc -o $(NAME) -I./includes -L$(LIB_DIR) -lft $(MINILIBX) $(OBJS_CUDA) $(OBJS)
+
+
+$(O_DIR)/%.o: ./$(SRCS_DIR)/%.c
+	@mkdir -p $(O_DIR)
+	@printf "$<\n"
+	@nvcc -c $< -I./includes -o $@
+
+$(O_DIR_CUDA)/%.o: ./$(SRCS_DIR)/%.cu
+	@mkdir -p $(O_DIR_CUDA)
+	@printf "$<\n"
+	@nvcc -c $< -I./includes -o $@
 
 fclean: clean
 	@rm -f $(NAME)
@@ -52,5 +64,6 @@ clean:
 	@echo "Delete $(LIB_NAME)"
 	@make -C $(LIB_MLX_DIR) clean
 	@echo "Delete $(LIB_MLX_DIR)"
+	@rm -fr $(O_DIR)
 
 re: fclean all
