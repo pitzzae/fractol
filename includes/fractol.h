@@ -12,9 +12,9 @@
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
-# define W_W 1024
-# define W_H 768
-# define THREAD 32
+# define W_W 3
+# define W_H 3
+# define THREAD 1
 # include <libft.h>
 # include <mlx.h>
 # include <pthread.h>

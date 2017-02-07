@@ -25,7 +25,7 @@ int				init_x11(char *str)
 		return (EXIT_FAILURE);
 	ft_putendl(str);
 	mlx_expose_hook(data.win, ftl_expose_hook, &data);
-	mlx_mouse_hook(data.win, &ft_mouse_action, &data);
+	//mlx_mouse_hook(data.win, &ft_mouse_action, &data);
 	mlx_hook(data.win, 2, (1L << 0), &get_key_action, &data);
 	mlx_hook(data.win, 6, (1L << 6), &ft_mouse_motion, &data);
 	mlx_loop(data.mlx);

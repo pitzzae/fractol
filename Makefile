@@ -22,11 +22,11 @@ LIB_NAME = $(LIB_DIR)/libft.a
 
 CFLAGS=-Wall -Wextra -Werror
 
-SRCS 		= 	main.c init_x11.c action.c screen.c thread.c \
+SRCS 		= 	main.c init_x11.c action.c thread.c \
 				init_fractal_julia.c init_fractal_mandelbrot.c \
-				fractal.c ft_complexe.c
+				ft_complexe.c
 
-SRCS_CUDA	= 	ft_complexe_cuda.cu
+SRCS_CUDA	= 	fractal.cu screen.cu
 
 #MINILIBX = -Lminilibx -lmlx -framework OpenGL -framework AppKit
 MINILIBX = -L./mlx -lmlx -lXext -lX11 -lm -lpthread
@@ -40,18 +40,17 @@ $(NAME): $(OBJS) $(OBJS_CUDA)
 	@echo "\nMake lib_ft"
 	@make -C $(LIB_DIR)
 	@echo "Make $(NAME)"
-	#@gcc -o $(NAME) $(OBJS_CUDA) $(OBJS) -I./includes -L$(LIB_DIR) -lft $(MINILIBX)
-	@nvcc -o $(NAME) -I./includes -L$(LIB_DIR) -lft $(MINILIBX) $(OBJS_CUDA) $(OBJS)
+	@nvcc -arch=sm_20 -o $(NAME) -I./includes -L$(LIB_DIR) -lft $(MINILIBX) $(OBJS_CUDA) $(OBJS)
 
 
 $(O_DIR)/%.o: ./$(SRCS_DIR)/%.c
 	@mkdir -p $(O_DIR)
-	@printf "$<\n"
-	@nvcc -c $< -I./includes -o $@
+	@printf "."
+	@gcc -c $< -I./includes -o $@
 
 $(O_DIR_CUDA)/%.o: ./$(SRCS_DIR)/%.cu
 	@mkdir -p $(O_DIR_CUDA)
-	@printf "$<\n"
+	@printf "."
 	@nvcc -c $< -I./includes -o $@
 
 fclean: clean
@@ -65,5 +64,6 @@ clean:
 	@make -C $(LIB_MLX_DIR) clean
 	@echo "Delete $(LIB_MLX_DIR)"
 	@rm -fr $(O_DIR)
+	@rm -fr $(O_DIR_CUDA)
 
 re: fclean all
