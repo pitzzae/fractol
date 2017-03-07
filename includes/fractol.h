@@ -12,12 +12,14 @@
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
-# define W_W 3
-# define W_H 3
-# define THREAD 1
+# define W_W 1024
+# define W_H 768
+# define THREAD 128
+# define CMPLX(x, y) ((double complex)((double)(x) + I * (double)(y)))
 # include <libft.h>
 # include <mlx.h>
 # include <pthread.h>
+# include <complex.h> 
 
 typedef struct	s_screen
 {
@@ -63,11 +65,11 @@ int				ft_mouse_action(int button, int x, int y, t_data *data);
 int				ft_mouse_motion(int x, int y, t_data *data);
 void			*print_screen(void *s_data);
 int				ftl_expose_hook(t_data *data);
-void			fractal_julia(t_complex z[2]);
-void			fractal_julia1(t_complex z[2]);
-void			fractal_mandelbrot(t_complex z[2]);
-void			fractal_mandelbrot1(t_complex z[2]);
-void			fractal_mandelbrot2(t_complex z[2]);
+void			fractal_julia(double complex z[2]);
+void			fractal_julia1(double complex z[2]);
+void			fractal_mandelbrot(double complex z[2]);
+void			fractal_mandelbrot1(double complex z[2]);
+void			fractal_mandelbrot2(double complex z[2]);
 t_data			select_fractol(t_data data, int frac);
 int				scan_fractol(char *frac);
 t_data			ftl_init_julia(t_data data);

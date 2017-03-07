@@ -66,6 +66,9 @@ void		ft_error_print(int argc, char *str)
 
 int			main(int argc, char **argv)
 {
+	char		*error;
+
+	error = ft_strdup("Argv error-option:juliajulia1julia2");
 	if (argc == 2 && scan_fractol(argv[1]) != 0)
 	{
 		ft_putstr("Fractol selected ");
